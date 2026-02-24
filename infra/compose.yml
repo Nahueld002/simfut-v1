@@ -20,7 +20,7 @@ services:
       - "${BACKEND_PORT:-8000}:8000"
     environment:
       # Use the docker internal network to connect to postgres-db
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-user}:${POSTGRES_PASSWORD:-password}@postgres-db:5432/${POSTGRES_DB:-simfut_db}
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-user}:${POSTGRES_PASSWORD:-password}@postgres-db:5432/${POSTGRES_DB:-simfut_db}
     depends_on:
       - postgres-db
     networks:
