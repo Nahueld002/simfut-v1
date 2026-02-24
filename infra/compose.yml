@@ -1,0 +1,43 @@
+services:
+  postgres-db:
+    container_name: postgres
+    image: postgres:16
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-simfut_db}
+    volumes:
+      - ./docker/pgdata:/var/lib/postgresql/data
+    networks:
+      - net-local
+
+  backend:
+    build:
+      context: ../apps/backend
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    environment:
+      # Use the docker internal network to connect to postgres-db
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-user}:${POSTGRES_PASSWORD:-password}@postgres-db:5432/${POSTGRES_DB:-simfut_db}
+    depends_on:
+      - postgres-db
+    networks:
+      - net-local
+
+  frontend:
+    build:
+      context: ../apps/frontend
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:${BACKEND_PORT:-8000}
+    depends_on:
+      - backend
+    networks:
+      - net-local
+
+networks:
+  net-local:
+    driver: bridge

@@ -1,9 +1,10 @@
 import asyncio
 import asyncpg
+import os
 
 async def run():
     try:
-        conn = await asyncpg.connect('postgresql://nahuel:nahuel123@127.0.0.1:5432/sgbda_db')
+        conn = await asyncpg.connect(os.environ["DATABASE_URL"])
         rows = await conn.fetch('SELECT dominio_id, codigo FROM futsim.cat_dominio')
         for r in rows:
             print(f"{r['dominio_id']}: {r['codigo']}")

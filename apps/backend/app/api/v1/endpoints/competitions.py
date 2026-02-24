@@ -100,6 +100,10 @@ async def read_competition_edition(
     stmt = select(EdicionModel).where(EdicionModel.edicion_id == edicion_id)
     result = await db.execute(stmt)
     ed = result.scalar_one_or_none()
+    if not ed:
+        raise HTTPException(status_code=404, detail="Edition not found")
+    return ed
+
 @router.patch("/editions/{edicion_id}", response_model=CompetenciaEdicion)
 async def update_competition_edition(
     edicion_id: int,

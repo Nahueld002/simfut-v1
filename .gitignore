@@ -1,25 +1,32 @@
+# Node
+node_modules/
+.next/
+dist/
+build/
+
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
 venv/
+
+# Entornos/secretos
 .env
+.env.*
 
-# Docker
-docker/pgdata/
-
-# Node
-node_modules/
-.next/
-out/
-build/
-.vercel
+# Logs
 *.log
 
-# IDEs
-.vscode/
-.idea/
+# DB local
+pgdata/
 
 # OS
 .DS_Store
 Thumbs.db
+
+# IDEs
+.vscode/
+.idea/

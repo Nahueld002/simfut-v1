@@ -341,20 +341,17 @@ CREATE INDEX idx_evento_equipo_mundo_fecha ON evento_equipo(mundo_id, fecha_inic
 CREATE TABLE competencia (
   competencia_id        SERIAL PRIMARY KEY,
   mundo_id              INT NOT NULL REFERENCES mundo(mundo_id) ON DELETE CASCADE,
-  nombre               VARCHAR(150) NOT NULL,
-  
-  -- [REFACTOR] Apunta a cat_parametro (Dominio: COMPETENCIA_TIPO)
+  nombre                VARCHAR(150) NOT NULL,
   tipo_id               INT NOT NULL REFERENCES cat_parametro(parametro_id),
-
+  estado_id             INT NOT NULL DEFAULT 20 REFERENCES cat_parametro(parametro_id),
   confederacion_id      INT REFERENCES confederacion(confederacion_id),
   pais_id               INT REFERENCES pais(pais_id),
   region_id             INT REFERENCES region(region_id),
   asociacion_id         INT REFERENCES asociacion(asociacion_id),
-  logo_media_id        UUID REFERENCES media_asset(media_id),
-  reputacion_base      INT NOT NULL DEFAULT 5000,
-  configuracion_base   JSONB NOT NULL DEFAULT '{}'::jsonb,
-  meta                 JSONB NOT NULL DEFAULT '{}'::jsonb,
-  UNIQUE (mundo_id, nombre)
+  logo_media_id         UUID REFERENCES media_asset(media_id),
+  reputacion_base       INT NOT NULL DEFAULT 5000,
+  configuracion_base    JSONB NOT NULL DEFAULT '{}'::jsonb,
+  meta                  JSONB NOT NULL DEFAULT '{}'::jsonb
 );
 
 CREATE TABLE competencia_reputacion (

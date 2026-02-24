@@ -18,17 +18,24 @@ TABLE_MODEL_MAP = {
     "confederacion": geo.Confederacion,
     "pais": geo.Pais,
     "region": geo.Region,
+    "perfil_climatico": geo.PerfilClimatico,
     "ciudad": geo.Ciudad,
     "estadio": geo.Estadio,
+    "asociacion": geo.Asociacion,
     "mundo": world.Mundo,
     "sistema_ranking": narrative.SistemaRanking,
     "temporada": world.Temporada,
     "regla_elegibilidad": competition.ReglaElegibilidad,
-    "perfil_climatico": geo.PerfilClimatico,
     "equipo": team.Equipo,
     "equipo_rating_actual": team.EquipoRatingActual,
+    "equipo_institucion": team.EquipoInstitucion,
+    "equipo_finanzas": team.EquipoFinanzas,
+    "equipo_estadio_hist": team.EquipoEstadioHist,
+    "equipo_elo_hist": narrative.EquipoEloHist,
     "rivalidad": team.Rivalidad,
+    "perfil_sorteo": competition.PerfilSorteo,
     "competencia": competition.Competencia,
+    "competencia_reputacion": competition.CompetenciaReputacion,
     "competencia_edicion": competition.CompetenciaEdicion,
     "etapa": competition.Etapa,
     "ronda": competition.Ronda,
@@ -36,8 +43,12 @@ TABLE_MODEL_MAP = {
     "regla_clasificacion": narrative.ReglaClasificacion,
     "regla_asignacion_cupos": narrative.ReglaAsignacionCupos,
     "participante": competition.Participante,
+    "tabla_posiciones": competition.TablaPosiciones,
     "ranking_entrada": narrative.RankingEntrada,
     "partido": match.Partido,
+    "partido_clima": match.PartidoClima,
+    "partido_contexto": match.PartidoContexto,
+    "partido_stats_equipo": match.PartidoStatsEquipo,
     "evento_equipo": team.EventoEquipo,
     "historial_enfrentamiento": team.HistorialEnfrentamiento,
     "historia_narrativa": narrative.HistoriaNarrativa,
@@ -66,13 +77,15 @@ class DataTransferService:
             pct = int((processed / total) * 100)
             try:
                 result = await self.db.execute(select(model))
-                rows = [row.__dict__.copy() for row in result.scalars().all()]
-                for item in rows:
-                    item.pop('_sa_instance_state', None)
+                scalars = result.scalars().all()
+                cols = [c.name for c in model.__table__.columns]
                 
-                cols = []
-                if not rows:
-                     cols = [c.name for c in model.__table__.columns]
+                rows = []
+                for scalar in scalars:
+                    row_dict = {}
+                    for col in cols:
+                        row_dict[col] = getattr(scalar, col, None)
+                    rows.append(row_dict)
                 
                 all_data[table_name] = {"rows": rows, "cols": cols}
                 logs.append(f"[{pct}%] Exported table: {table_name} ({len(rows)} rows)")
