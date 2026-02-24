@@ -11,7 +11,7 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler("/home/nahuel/estudios/sgdba/TP_FINAL_NMDM/backend/app.log")
+        logging.FileHandler("app.log")
     ]
 )
 logger = logging.getLogger(__name__)
@@ -42,7 +42,9 @@ app.add_middleware(
 from fastapi.staticfiles import StaticFiles
 import os
 
-app.mount("/uploads", StaticFiles(directory="/home/nahuel/estudios/sgdba/TP_FINAL_NMDM/backend/uploads"), name="uploads")
+# Aseguramos que el directorio de subidas exista
+os.makedirs("uploads", exist_ok=True)
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 @app.get("/")
 def root():
