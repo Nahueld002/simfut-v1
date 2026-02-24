@@ -345,11 +345,12 @@ CREATE TABLE competencia (
   tipo_id               INT NOT NULL REFERENCES cat_parametro(parametro_id),
   estado_id             INT NOT NULL DEFAULT 20 REFERENCES cat_parametro(parametro_id),
   confederacion_id      INT REFERENCES confederacion(confederacion_id),
+  ciudad_id             INT REFERENCES ciudad(ciudad_id),
   pais_id               INT REFERENCES pais(pais_id),
   region_id             INT REFERENCES region(region_id),
   asociacion_id         INT REFERENCES asociacion(asociacion_id),
   logo_media_id         UUID REFERENCES media_asset(media_id),
-  reputacion_base       INT NOT NULL DEFAULT 5000,
+  reputacion_base       INT NOT NULL DEFAULT 50,
   configuracion_base    JSONB NOT NULL DEFAULT '{}'::jsonb,
   meta                  JSONB NOT NULL DEFAULT '{}'::jsonb
 );
