@@ -33,6 +33,7 @@ La forma más fácil de iniciar el proyecto y empezar a contribuir.
 - 📂 [apps/frontend/](./apps/frontend/): Interfaz en base React (NextJS).
 - 📂 [infra/](./infra/): Docker-Compose (`compose.yml`) e infraestructura de despliegues.
 - 📂 [database/](./database/): Dumps SQL, Migraciones requeridas y docs de la DB.
+  *(Nota: El script integral primario se encuentra actualmente en `apps/backend/scripts/simfut_db_v2.sql`)*
 - 📂 [docs/](./docs/): 
   - [Guía de Desarrollo (Dev)](./docs/dev/)
   - [Arquitectura (Architecture)](./docs/architecture/)

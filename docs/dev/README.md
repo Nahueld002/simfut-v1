@@ -3,7 +3,7 @@
 ## Requisitos Previos Generales
 - Docker y Docker Compose
 - Python 3.10+ (si corres backend local)
-- Node.js 18+ (si corres frontend local)
+- Node.js 20+ (si corres frontend local)
 - PostgreSQL 16+
 
 ## Variables de Entorno

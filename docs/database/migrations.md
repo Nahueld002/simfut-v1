@@ -4,6 +4,14 @@
 
 Toda modificación a la estructura de la base de datos (tablas, columnas, restricciones) debe reflejarse mediante un script SQL en `database/migrations/` y documentarse. 
 
+## Inicialización / Reconstrucción de la Base de Datos
+El script maestro que contiene el DDL completo (Tablas, Índices, e Inserts iniciales) es **`apps/backend/scripts/simfut_db_v2.sql`**.
+
+Si necesitas recrear la base de datos fresca u original en tu contenedor Docker local, utiliza el siguiente comando inyectando el script:
+```bash
+sudo docker compose -f infra/compose.yml exec -T postgres-db psql -U user -d simfut_db < apps/backend/scripts/simfut_db_v2.sql
+```
+
 ### Migración `0001_add_ciudad_id_to_competencia.sql`
 - **Qué cambió**: Se agregó la columna `ciudad_id` a la tabla `futsim.competencia`, que actúa como Foreign Key hacia `futsim.ciudad(ciudad_id)`.
 - **Por qué cambió**: Era necesario vincular una competencia con una ciudad en particular para la lógica geográfica del motor.
