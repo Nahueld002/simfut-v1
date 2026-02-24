@@ -30,37 +30,26 @@
 
 ---
 
-## 2) Catálogos (tablas “lookup”)
+## 2) Catálogos Unificados (Patrón v7.0)
 
-Estas tablas se usan para poblar combos/validaciones. No deberían cambiar seguido.
+A partir de la versión 7.0, el modelo utiliza un **Patrón de Catálogo Unificado** apoyado en dos tablas maestras para gobernar toda la taxonomía y estandarización del sistema, reemplazando a docenas de tablas paramétricas individuales.
 
-### 2.1 `cat_competencia_tipo`
+### 2.1 `cat_dominio` (La tabla Padre)
 
-Define el tipo de competencia: `'LIGA','COPA','INTERNACIONAL','SUPERCOPA','AMISTOSO'`.
+Define el universo o categoría del parámetro (ej. `ESTADO_GENERICO`, `COMPETENCIA_TIPO`, `CLIMA_CONDICION`).
 
-* **PK**: `tipo_id`
-* Campos: `codigo`, `descripcion`
+* **PK**: `dominio_id`
+* Campos clave: `codigo` (UNIQUE, String), `descripcion`
 
-### 2.2 `cat_etapa_tipo`
+### 2.2 `cat_parametro` (La tabla Hijo)
 
-Define el tipo de etapa: `'LEAGUE','GROUPS','KNOCKOUT','SWISS','SPLIT','PLAYOFFS'`.
+Almacena todos los valores posibles para cualquier dominio de la aplicación. Cualquier entidad que necesite un estado, tipo o categoría, apuntará mediante una FK a esta tabla.
 
-* **PK**: `tipo_id`
-* Campos: `codigo`, `descripcion`
+* **PK**: `parametro_id`
+* **FK**: `dominio_id → cat_dominio`
+* Campos clave: `codigo` (String constante para lógica en código), `descripcion` (Texto formateado para UI), `meta` (JSONB)
 
-### 2.3 `cat_metodo_clasificacion`
-
-Cómo un equipo entra a una edición: `'CAMPEON','SUBCAMPEON','RANKING','INVITADO','HOST','PLAYOFF_WINNER','WILD_CARD'`.
-
-* **PK**: `metodo_id`
-* Campos: `codigo`, `descripcion`
-
-### 2.4 `cat_estado_generico`
-
-Catálogo para estados genéricos (si se usa en UI para estandarizar estados).
-
-* **PK**: `estado_id`
-* Campos: `codigo`, `descripcion`
+**Uso en el código (Best Practice)**: Nunca se debe consultar directamente por el número `parametro_id`, sino vinculando el dominio y buscando por la constante nominal en el campo `codigo` (ej. Buscar el parámetro donde `codigo` sea `'ACTIVO'` dentro del dominio `'ESTADO_GENERICO'`).
 
 ---
 
@@ -133,7 +122,7 @@ Perfiles de clima por ciudad/región (para sim).
 
 * **PK**: `estadio_id`
 * **FKs**: `ciudad_id → ciudad`, `pais_id → pais`
-* Campos: `nombre`, `capacidad`, `altura_msnm`, `tipo_cesped`, `meta`
+* Campos: `nombre`, `capacidad`, `altura_msnm`, `tipo_cesped_id` (FK param), `tipo_propiedad_id` (FK param), `meta`
 
 ### 4.7 `asociacion`
 
@@ -166,7 +155,7 @@ Entidad principal del club.
   * `codigo_tla` (sigla corta)
   * `anio_fundacion`
   * `colores` (JSONB) — ejemplo: `{ "primario":"#...", "secundario":"#..." }`
-  * `estado` (por defecto `'ACTIVO'`)
+  * `estado_id` (FK a cat_parametro, por defecto el ID de 'ACTIVO')
   * `meta` (JSONB)
 
 **Situaciones UI (muy importante):**
@@ -212,7 +201,7 @@ Dimensiones institucionales (infra, juveniles, etc.).
 Dimensiones económicas.
 
 * **PK**: `equipo_id` (1–a–1)
-* Campos: `presupuesto`, `salarios`, `deuda`, `ingresos`, `gastos`, `patrocinio`, `meta`
+* Campos: `presupuesto`, `salarios`, `deuda`, `ingresos`, `gastos`, `patrocinio`, `tipo_propiedad_id` (FK param), `meta`
 
 ### 5.7 Rivalidades e historial
 
@@ -282,6 +271,7 @@ Definición “madre” del torneo (no depende de temporada).
 * Campos clave:
 
   * `nombre`
+  * `estado_id` (FK param)
   * `reputacion_base`
   * `configuracion_base` (JSONB) — reglas globales del torneo
   * `meta` (JSONB)
@@ -394,7 +384,7 @@ Fixture + resultado.
 ### 8.2 `partido_clima`
 
 * **FK**: `partido_id → partido`
-* Campos: `temperatura`, `humedad`, `lluvia`, `viento`, `meta`
+* Campos: `condicion_id` (FK param), `temperatura`, `humedad`, `lluvia`, `viento`, `meta`
 
 ### 8.3 `partido_contexto`
 
@@ -598,4 +588,4 @@ Tabla base: **`competencia`**
 
 ## Apéndice A — Tablas del schema
 
-`cat_competencia_tipo`, `cat_etapa_tipo`, `cat_metodo_clasificacion`, `cat_estado_generico`, `media_asset`, `mundo`, `temporada`, `mundo_snapshot`, `sim_log`, `confederacion`, `pais`, `region`, `perfil_climatico`, `ciudad`, `estadio`, `asociacion`, `equipo`, `equipo_estadio_hist`, `equipo_rating_actual`, `equipo_institucion`, `equipo_finanzas`, `rivalidad`, `historial_enfrentamiento`, `evento_equipo`, `competencia`, `competencia_reputacion`, `regla_elegibilidad`, `competencia_edicion`, `etapa`, `grupo`, `ronda`, `participante`, `tabla_posiciones`, `perfil_sorteo`, `partido`, `partido_clima`, `partido_contexto`, `partido_stats_equipo`, `sistema_ranking`, `ranking_entrada`, `regla_asignacion_cupos`, `regla_clasificacion`, `snapshot_equipo`, `historia_narrativa`, `noticia`, `estadistica_global`, `equipo_elo_hist`
+`cat_dominio`, `cat_parametro`, `media_asset`, `mundo`, `temporada`, `mundo_snapshot`, `sim_log`, `confederacion`, `pais`, `region`, `perfil_climatico`, `ciudad`, `estadio`, `asociacion`, `equipo`, `equipo_estadio_hist`, `equipo_rating_actual`, `equipo_institucion`, `equipo_finanzas`, `rivalidad`, `historial_enfrentamiento`, `evento_equipo`, `competencia`, `competencia_reputacion`, `regla_elegibilidad`, `competencia_edicion`, `etapa`, `grupo`, `ronda`, `participante`, `tabla_posiciones`, `perfil_sorteo`, `partido`, `partido_clima`, `partido_contexto`, `partido_stats_equipo`, `sistema_ranking`, `ranking_entrada`, `regla_asignacion_cupos`, `regla_clasificacion`, `snapshot_equipo`, `historia_narrativa`, `noticia`, `estadistica_global`, `equipo_elo_hist`

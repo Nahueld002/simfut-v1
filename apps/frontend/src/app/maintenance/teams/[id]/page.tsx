@@ -94,7 +94,7 @@ export default function TeamFormPage() {
             const { media_id, url } = await teamService.uploadMedia(file, 'escudo');
             setFormData(prev => ({ ...prev, escudo_media_id: media_id }));
             // Construct full URL for preview. Assuming backend is on localhost:8000
-            setPreviewUrl(`http://127.0.0.1:8000${url}`);
+            setPreviewUrl(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}${url}`);
         } catch (error) {
             console.error('Error uploading image:', error);
             alert('Error uploading image');
@@ -187,7 +187,7 @@ export default function TeamFormPage() {
                 setSelectedRegion(team.ciudad_sede.region_id);
             }
             if (team.escudo_url) {
-                setPreviewUrl(`http://127.0.0.1:8000${team.escudo_url}`);
+                setPreviewUrl(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}${team.escudo_url}`);
             }
         }
     }, [team]);

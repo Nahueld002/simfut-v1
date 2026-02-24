@@ -217,7 +217,7 @@ export default function TeamMaintenancePage() {
                                 <div className="w-16 h-16 bg-si-900 rounded-xl border border-si-700 flex items-center justify-center p-2 relative overflow-hidden group-hover:border-si-accent transition-colors">
                                     {team.escudo_url ? (
                                         <img
-                                            src={`http://127.0.0.1:8000${team.escudo_url}`}
+                                            src={`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'}${team.escudo_url}`}
                                             alt={team.nombre}
                                             className="w-full h-full object-contain"
                                         />

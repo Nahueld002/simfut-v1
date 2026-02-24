@@ -35,6 +35,9 @@ cd apps/backend
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+# Importante: El código busca el archivo .env en la misma carpeta donde
+# se ejecuta. Asegúrate de copiar tu .env también dentro de apps/backend:
+# cp ../../.env .env
 uvicorn app.main:app --reload
 ```
 

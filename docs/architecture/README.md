@@ -18,7 +18,8 @@ SimFut-v1 está dividido en tres componentes principales que facilitan la escala
 - **Infra (Modelos)**: Representa las tablas en DB mediante ORM (`apps/backend/app/models/`).
 
 ### Buenas Prácticas de Código
-* Los catálogos se interpretan por la constante `codigo` y no por su ID base de datos que puede cambiar entre entornos.
+* **Patrón de Catálogo Unificado (v7.0)**: Centralizamos toda la taxonomía de la aplicación en dos tablas maestras: `cat_dominio` (Padre) y `cat_parametro` (Hijo). Esto reemplaza las múltiples tablas diminutas (tipo *tipos de torneo*, *métodos de clasificación*, etc) y mejora la escalabilidad.
+* Los parámetros de estos catálogos se interpretan en el código por su constante string `codigo` y no por su ID PK.
 
 ## Infraestructura Externa (Docker)
 Todo el sistema está encapsulado para su construcción mediante la receta única de `infra/compose.yml`.
