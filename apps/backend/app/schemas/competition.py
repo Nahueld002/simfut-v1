@@ -5,6 +5,7 @@ from datetime import date, datetime
 class CompetenciaBase(BaseModel):
     nombre: str
     tipo_id: int
+    estado_id: int = 20 # Default ACTIVO
     mundo_id: int
     confederacion_id: Optional[int] = None
     pais_id: Optional[int] = None
@@ -21,6 +22,7 @@ class CompetenciaCreate(CompetenciaBase):
 class CompetenciaUpdate(BaseModel):
     nombre: Optional[str] = None
     tipo_id: Optional[int] = None
+    estado_id: Optional[int] = None
     confederacion_id: Optional[int] = None
     pais_id: Optional[int] = None
     region_id: Optional[int] = None

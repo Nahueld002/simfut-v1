@@ -22,6 +22,7 @@ class Competencia(Base):
     mundo_id = Column(Integer, ForeignKey("futsim.mundo.mundo_id", ondelete="CASCADE"), nullable=False)
     nombre = Column(String(150), nullable=False)
     tipo_id = Column(Integer, ForeignKey("futsim.cat_parametro.parametro_id"), nullable=False)
+    estado_id = Column(Integer, ForeignKey("futsim.cat_parametro.parametro_id"), nullable=False, default=20)
     
     confederacion_id = Column(Integer, ForeignKey("futsim.confederacion.confederacion_id"))
     pais_id = Column(Integer, ForeignKey("futsim.pais.pais_id"))
